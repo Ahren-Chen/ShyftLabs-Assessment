@@ -26,11 +26,15 @@
 - npm 8.19.3
 - Node v18.13.0
 - Vue 3.9.2
+- Axios 1.6.7
+- Bootstrap 5.3.2
 
 Note: There is also a requirements.txt file with all pip installs in the server folder
 
 ## Running Project
 
+1. Activate the python virtual environment in the server folder
+2. 
 1. Go to the ShyftLabs folder after installing all of the dependencies
 2. run 'npm install'
 3. run 'npm run dev'
