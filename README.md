@@ -18,3 +18,19 @@
 - When submitting, the student must be at least 10 years old
 - After all requirements are fulfilled, student is added to the database, inputs are cleared, and a confirmation notification appears
 - Users can see a list of all stored students that updates after every new addition of a student
+
+## Dependencies
+- Python 3.12.0
+- Flask 3.0.1
+- Flask-Cors-4.0.0
+- npm 8.19.3
+- Node v18.13.0
+- Vue 3.9.2
+
+Note: There is also a requirements.txt file with all pip installs in the server folder
+
+## Running Project
+
+1. Go to the ShyftLabs folder after installing all of the dependencies
+2. run 'npm install'
+3. run 'npm run dev'
