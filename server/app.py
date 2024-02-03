@@ -12,6 +12,13 @@ students = [
     },
 ]
 
+courses = [
+    {
+        'id': uuid.uuid4().hex,
+        'course_name': 'Math',
+    }
+]
+
 # instantiate the app
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -73,7 +80,54 @@ def single_student(student_id):
             response_object['message'] = 'Student not found!'
     return jsonify(response_object)
 
+# Adding new courses ----------------------------------------------------------------------
 
+@app.route('/courses', methods=['GET', 'POST'])
+def all_courses():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        courses.append({
+            'id': uuid.uuid4().hex,
+            'course_name': post_data.get('course_name'),
+        })
+        response_object['message'] = 'Course added!'
+    else:
+        response_object['courses'] = courses
+
+    return jsonify(response_object)
+
+# Updating courses ----------------------------------------------------------------------
+
+def remove_course(course_id):
+    for course in courses:
+        if course['id'] == course_id:
+            courses.remove(course)
+            return True
+    return False
+
+@app.route('/courses/<course_id>', methods=['PUT', 'DELETE'])
+def single_course(course_id):
+    response_object = {'status': 'success'}
+    if request.method == 'PUT':
+        post_data = request.get_json()
+        print(course_id)
+        if not remove_course(course_id):
+            response_object['message'] = 'Course not found!'
+            return jsonify(response_object)
+        
+        courses.append({
+            'id': uuid.uuid4().hex,
+            'course_name': post_data.get('course_name'),
+        })
+        response_object['message'] = 'Course updated!'
+
+    elif request.method == 'DELETE':
+        if remove_course(course_id):
+            response_object['message'] = 'Course removed!'
+        else:
+            response_object['message'] = 'Course not found!'
+    return jsonify(response_object)
 
 if __name__ == '__main__':
     app.run()

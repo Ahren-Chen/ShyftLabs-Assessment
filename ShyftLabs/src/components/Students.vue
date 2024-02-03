@@ -58,7 +58,8 @@
           <div class="modal-header">
 
             <!-- Add student title -->
-            <h5 class="modal-title">Add a new student</h5>
+            <h5 v-if="!updatingStudent" class="modal-title"> Add a new student </h5>
+              <h5 v-if="updatingStudent" class="modal-title"> Update student </h5>
 
             <!-- Close button -->
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="toggleAddStudent">
@@ -308,6 +309,8 @@ export default {
       // Reset the form fields and show the alert message
       this.initForm();
       this.showAlert = true;
+      this.updatingStudent = false;
+      this.updatingStudentId = null;
     },
 
     // Initialize the form fields or reset them to empty
