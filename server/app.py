@@ -6,12 +6,7 @@ students = [
     {
         'first_name': 'John',
         'family_name': 'Doe',
-        'date_of_birth': '01/01/1990',
-    },
-    {
-        'first_name': 'Jeff',
-        'family_name': 'Doe',
-        'date_of_birth': '01/01/1990',
+        'date_of_birth': '1990/01/01',
     },
 ]
 
@@ -32,7 +27,7 @@ def all_students():
         students.append({
             'first_name': post_data.get('first_name'),
             'family_name': post_data.get('family_name'),
-            'date_of_birth': post_data.get('date_of_birth'),
+            'date_of_birth': str(post_data.get('date_of_birth')),
         })
         response_object['message'] = 'Student added!'
     else:
