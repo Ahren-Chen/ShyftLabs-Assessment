@@ -20,7 +20,8 @@ app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}})
 
 
-# Adding new students
+# Adding new students ----------------------------------------------------------------------
+
 @app.route('/students', methods=['GET', 'POST'])
 def all_students():
     response_object = {'status': 'success'}
@@ -38,7 +39,7 @@ def all_students():
 
     return jsonify(response_object)
 
-# Updating students
+# Updating students ----------------------------------------------------------------------
 
 def remove_student(student_id):
     for student in students:
@@ -47,11 +48,12 @@ def remove_student(student_id):
             return True
     return False
 
-@app.route('/students/<student_id>', methods=['PUT'])
+@app.route('/students/<student_id>', methods=['PUT', 'DELETE'])
 def single_student(student_id):
     response_object = {'status': 'success'}
     if request.method == 'PUT':
         post_data = request.get_json()
+        print(student_id)
         if not remove_student(student_id):
             response_object['message'] = 'Student not found!'
             return jsonify(response_object)
@@ -63,6 +65,12 @@ def single_student(student_id):
             'date_of_birth': str(post_data.get('date_of_birth')),
         })
         response_object['message'] = 'Student updated!'
+
+    elif request.method == 'DELETE':
+        if remove_student(student_id):
+            response_object['message'] = 'Student removed!'
+        else:
+            response_object['message'] = 'Student not found!'
     return jsonify(response_object)
 
 

@@ -22,8 +22,14 @@
           <td>{{ student.date_of_birth }}</td>
           <td>
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-warning btn-sm">Update</button>
-              <button type="button" class="btn btn-danger btn-sm">Delete</button>
+              <button type="button" class="btn btn-warning btn-sm" @click="toggleUpdateStudent(
+                student.first_name,
+                student.family_name,
+                student.date_of_birth,
+                student.id
+                )">Update
+              </button>
+              <button type="button" class="btn btn-danger btn-sm" @click="handleDeleteStudent(student.id)">Delete</button>
             </div>
           </td>
         </tr>
@@ -46,7 +52,7 @@
               class="close"
               data-dismiss="modal"
               aria-label="Close"
-              @click="toggleAddStudentModal">
+              @click="toggleAddStudent">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -111,6 +117,8 @@
       return {
         students: [],
         activeAddStudentModal: false,
+        updatingStudent: false,
+        updatingStudentId: null,
         showAlert: false,
         alertMessage: '',
         addStudentForm: {
@@ -122,7 +130,7 @@
     },
     methods: {
         getStudents() {
-            axios.get('http://localhost:3000/students')
+            axios.get(`http://localhost:3000/students`)
             .then(response => {
                 this.students = response.data.students;
             })
@@ -131,7 +139,7 @@
             });
         },
         addStudent(payload) {
-            axios.post('http://localhost:3000/students', payload)
+            axios.post(`http://localhost:3000/students`, payload)
             .then(() => {
                 this.getStudents();
             })
@@ -139,6 +147,32 @@
                 console.log(error);
                 this.getStudents();
             });
+        },
+        updateStudent(payload) {
+            const id = this.updatingStudentId;
+            axios.put(`http://localhost:3000/students/${id}`, payload)
+            .then((response) => {
+                this.getStudents();
+                console.log(response.data.message)
+            })
+            .catch(error => {
+                console.log(error);
+                this.getStudents();
+            });
+        },
+
+        handleDeleteStudent(id) {
+          axios.delete(`http://localhost:3000/students/${id}`)
+          .then(() => {
+            this.getStudents();
+          })
+          .catch(error => {
+            console.log(error);
+            this.getStudents();
+          });
+
+          this.alertMessage = 'Student deleted successfully'
+          this.showAlert = true;
         },
 
         handleAddReset() {
@@ -201,7 +235,6 @@
           }
           const inputDate = new Date(date)
           
-
           if (inputDate > currentDate) {
             this.showAlert = true;
             this.alertMessage = 'Date of birth cannot be in the future'
@@ -214,7 +247,6 @@
             this.initForm();
             return
           }
-          console.log(inputDate)
           const ageInMilliseconds = currentDate - inputDate;
           const ageInYears = ageInMilliseconds / (365.25 * 24 * 60 * 60 * 1000); // Approximate days in a year
           if (ageInYears < 10) {
@@ -229,16 +261,29 @@
             family_name: family_name,
             date_of_birth: date,
           };
-          this.addStudent(payload);
+
+          if (this.updatingStudentId != null && this.updatingStudent) {
+            this.updateStudent(payload);
+            this.alertMessage = 'Student updated successfully'
+          }
+          else {
+            this.addStudent(payload);
+            this.alertMessage = 'Student added successfully'
+          }
           this.initForm();
           this.showAlert = true;
-          this.alertMessage = 'Student added successfully'
         },
 
         initForm() {
           this.addStudentForm.first_name = '';
           this.addStudentForm.family_name = '';
           this.addStudentForm.date_of_birth = '';
+        },
+
+        updateStudentFormInit(first_name, family_name, date_of_birth) {
+          this.addStudentForm.first_name = first_name;
+          this.addStudentForm.family_name = family_name;
+          this.addStudentForm.date_of_birth = date_of_birth;
         },
 
         toggleAddStudentModal() {
@@ -251,6 +296,20 @@
           } else {
             body.classList.remove('modal-open');
           }
+        },
+
+        toggleAddStudent() {
+          this.toggleAddStudentModal();
+          this.updatingStudent = false;
+          this.updatingStudentId = null;
+          this.initForm();
+        },
+
+        toggleUpdateStudent(first_name, family_name, date_of_birth, id) {
+          this.toggleAddStudentModal();
+          this.updatingStudent = true;
+          this.updatingStudentId = id;
+          this.updateStudentFormInit(first_name, family_name, date_of_birth);
         },
     },
     components: {
