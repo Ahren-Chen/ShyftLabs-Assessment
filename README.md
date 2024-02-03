@@ -19,6 +19,13 @@
 - After all requirements are fulfilled, student is added to the database, inputs are cleared, and a confirmation notification appears
 - Users can see a list of all stored students that updates after every new addition of a student
 
+## Courses Page
+
+- Must provide a form with Course Name and a submit button
+- When submitting all forms must be filled
+- After all requirements are fulfilled, course is added to the data base, inputs are cleared, and a confirmation notification appears
+- Users can see a list of all stored courses that updates after every new addition of a course
+
 ## Dependencies
 - Python 3.12.0
 - Flask 3.0.1
@@ -33,10 +40,10 @@ Note: There is also a requirements.txt file with all pip installs in the server 
 
 ## Running Project
 
-1. Activate the python virtual environment in the server folder using 'source env/Scripts/activate' with a gitbash application
-2. Activate the flask application by using 'flask run --port=3000 --debug'
+1. Activate the python virtual environment in the `server` folder using `source env/Scripts/activate` with a gitbash application
+2. Activate the flask application by using `flask run --port=3000 --debug`
 3. Open up another gitbash applicaiton and activate the virtual environment
-4. Go to the ShyftLabs folder after installing all of the dependencies
-5. run 'npm install'
-6. run 'npm run dev'
+4. Go to the `ShyftLabs` folder 
+5. run `npm install`
+6. run `npm run dev`
 7. Head to [local host ](http://localhost:5173/)
