@@ -1,5 +1,6 @@
 <template>
   <div class="container" style="align-items: center; justify-content: center; text-align: center;">
+    <alert v-if="showAlert" :message="alertMessage" />
     <div class="btn-group" role="group" aria-label="Basic example">
       <button @click="toggleAddStudentModal" class="btn btn-primary">Add Student</button>
       <button @click="getStudents" class="btn btn-secondary">Refresh</button>
@@ -103,12 +104,15 @@
   
   <script>
   import axios from 'axios';
+  import Alert from './Alert.vue';
   export default {
     name: 'Students',
     data() {
       return {
         students: [],
         activeAddStudentModal: false,
+        showAlert: false,
+        alertMessage: '',
         addStudentForm: {
           first_name: '',
           family_name: '',
@@ -148,7 +152,8 @@
           let family_name = this.addStudentForm.family_name;
 
           if (!first_name || !family_name) {
-            alert('Please fill in all fields');
+            this.alertMessage = 'Please fill in all fields'
+            this.showAlert = true;
             this.initForm();
             return;
           }
@@ -158,7 +163,8 @@
           if (validDate.test(this.addStudentForm.date_of_birth)) {
             date = this.addStudentForm.date_of_birth
           } else {
-            alert('Please enter a valid date of birth in the format YYYY/MM/DD')
+            this.showAlert = true;
+            this.alertMessage = 'Please enter a valid date of birth in the format YYYY/MM/DD'
             this.initForm();
             return
           }
@@ -168,23 +174,27 @@
           //Check if the date is actually a valid date
           const [year, month, day] = date.split('/').map(Number)
           if (month < 1 || month > 12 || day < 1 || day > 31) {
-            alert('Please enter a valid date of birth in the format YYYY/MM/DD')
+            this.showAlert = true;
+            this.alertMessage = 'Please enter a valid date of birth in the format YYYY/MM/DD'
             this.initForm();
             return
           }
           else if (month == 2 && day > 29) {
-            alert('Please enter a valid date of birth in the format YYYY/MM/DD')
+            this.showAlert = true;
+            this.alertMessage = 'Please enter a valid date of birth in the format YYYY/MM/DD'
             this.initForm();
             return
           }
           else if (month == 2 && day > 28 && year % 4 != 0) {
-            alert('Please enter a valid date of birth in the format YYYY/MM/DD')
+            this.showAlert = true;
+            this.alertMessage = 'Please enter a valid date of birth in the format YYYY/MM/DD'
             this.initForm();
             return
           }
           else if (month == 4 || month == 6 || month == 9 || month == 11) {
             if (day > 30) {
-              alert('Please enter a valid date of birth in the format YYYY/MM/DD')
+              this.showAlert = true;
+              this.alertMessage = 'Please enter a valid date of birth in the format YYYY/MM/DD'
               this.initForm();
               return
             }
@@ -193,12 +203,14 @@
           
 
           if (inputDate > currentDate) {
-            alert('Date of birth cannot be in the future')
+            this.showAlert = true;
+            this.alertMessage = 'Date of birth cannot be in the future'
             this.initForm();
             return
           }
           else if (!inputDate) {
-            alert('Please enter a valid date of birth in the format YYYY/MM/DD')
+            this.showAlert = true;
+            this.alertMessage = 'Please enter a valid date of birth in the format YYYY/MM/DD'
             this.initForm();
             return
           }
@@ -206,7 +218,8 @@
           const ageInMilliseconds = currentDate - inputDate;
           const ageInYears = ageInMilliseconds / (365.25 * 24 * 60 * 60 * 1000); // Approximate days in a year
           if (ageInYears < 10) {
-            alert('Students must be at least 10 years old to be added to the database')
+            this.showAlert = true;
+            this.alertMessage = 'Students must be at least 10 years old to be added to the database'
             this.initForm();
             return
           }
@@ -214,11 +227,12 @@
           const payload = {
             first_name: first_name,
             family_name: family_name,
-            date_of_birth: inputDate,
+            date_of_birth: date,
           };
           this.addStudent(payload);
           this.initForm();
-          alert('Student added successfully')
+          this.showAlert = true;
+          this.alertMessage = 'Student added successfully'
         },
 
         initForm() {
@@ -230,12 +244,17 @@
         toggleAddStudentModal() {
           const body = document.querySelector('body');
           this.activeAddStudentModal = !this.activeAddStudentModal;
+          this.showAlert = false;
+          this.alertMessage = '';
           if (this.activeAddStudentModal) {
             body.classList.add('modal-open');
           } else {
             body.classList.remove('modal-open');
           }
         },
+    },
+    components: {
+      alert: Alert,
     },
     created() {
         this.getStudents();
