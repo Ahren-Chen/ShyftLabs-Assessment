@@ -1,3 +1,4 @@
+<!-- This is the left hand side of my application with a general greeting page for the purpose of this application -->
 <script setup>
 defineProps({
   msg: {
