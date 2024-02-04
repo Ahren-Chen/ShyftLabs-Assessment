@@ -13,7 +13,7 @@
 ## Students Page
 
 - Must provide a form with First Name, Family Name, Date of birth, and a submit button
-- When submitting, all forms mult be filled
+- When submitting, all fields mult be filled
 - When submitting, the date of birth must be a valid date
 - When submitting, the student must be at least 10 years old
 - After all requirements are fulfilled, student is added to the database, inputs are cleared, and a confirmation notification appears
@@ -22,9 +22,16 @@
 ## Courses Page
 
 - Must provide a form with Course Name and a submit button
-- When submitting all forms must be filled
+- When submitting all fields must be filled
 - After all requirements are fulfilled, course is added to the data base, inputs are cleared, and a confirmation notification appears
 - Users can see a list of all stored courses that updates after every new addition of a course
+
+## Results Page
+
+- Must provide a form with course name, student name, and score fields as a dropdown box
+- When submitting, all fields must be filled
+- After all requirements are fulfilled, the results are added to the data base, inputs are cleared, and a confirmation notification appears
+- Users can see a list of all stored results that updates after every new addition of a result
 
 ## Dependencies
 - Python 3.12.0
