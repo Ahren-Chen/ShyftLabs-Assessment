@@ -24,6 +24,12 @@ const router = createRouter({
       path: '/courses',
       name: 'courses',
       component: () => import('../components/Courses.vue')
+    },
+    {
+      //Lazy load the results view
+      path: '/results',
+      name: 'results',
+      component: () => import('../components/Results.vue')
     }
   ]
 })

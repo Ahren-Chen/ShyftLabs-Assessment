@@ -19,6 +19,15 @@ courses = [
     }
 ]
 
+results = [
+    {
+        'id': uuid.uuid4().hex,
+        'student_name': 'John Doe',
+        'course_name': 'Math',
+        'score': 'A',
+    }
+]
+
 # instantiate the app
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -127,6 +136,58 @@ def single_course(course_id):
             response_object['message'] = 'Course removed!'
         else:
             response_object['message'] = 'Course not found!'
+    return jsonify(response_object)
+
+# Adding new results ----------------------------------------------------------------------
+@app.route('/results', methods=['GET', 'POST'])
+def all_results():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        results.append({
+            'id': uuid.uuid4().hex,
+            'student_name': post_data.get('student_name'),
+            'course_name': post_data.get('course_name'),
+            'score': post_data.get('score'),
+        })
+        response_object['message'] = 'Result added!'
+    else:
+        response_object['results'] = results
+
+    return jsonify(response_object)
+
+# Updating results ----------------------------------------------------------------------
+
+def remove_result(result_id):
+    for result in results:
+        if result['id'] == result_id:
+            results.remove(result)
+            return True
+    return False
+
+@app.route('/results/<result_id>', methods=['PUT', 'DELETE'])
+def single_result(result_id):
+    response_object = {'status': 'success'}
+    if request.method == 'PUT':
+        post_data = request.get_json()
+        print(result_id)
+        if not remove_result(result_id):
+            response_object['message'] = 'Result not found!'
+            return jsonify(response_object)
+        
+        results.append({
+            'id': uuid.uuid4().hex,
+            'student_name': post_data.get('student_name'),
+            'course_name': post_data.get('course_name'),
+            'score': post_data.get('score'),
+        })
+        response_object['message'] = 'Result updated!'
+
+    elif request.method == 'DELETE':
+        if remove_result(result_id):
+            response_object['message'] = 'Result removed!'
+        else:
+            response_object['message'] = 'Result not found!'
     return jsonify(response_object)
 
 if __name__ == '__main__':
